@@ -64,5 +64,10 @@ public class TripServiceTest {
         protected User getLoggedUser() {
             return loggedInUser;
         }
+
+        @Override
+        protected List<Trip> tripsBy(User user) {
+            return user.trips();
+        }
     }
 }
