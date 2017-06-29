@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.craftedsw.tripservicekata.trip.UserBuilder.aUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -15,7 +16,7 @@ public class TripServiceTest {
     public static final User GUEST = null;
     public static final User UNUSED_USER = null;
     public static final User REGISTERED_USER = new User();
-    public static final User ANOTHER_FRIEND = new User();
+    public static final User ANOTHER_USER = new User();
     public static final Trip TO_BRAZIL = new Trip();
     public static final Trip TO_LONDON = new Trip();
     private User loggedInUser;
@@ -36,9 +37,11 @@ public class TripServiceTest {
 
     @Test
     public void should_not_return_any_trips_when_users_are_not_friends() {
-        User friend = new User();
-        friend.addFriend(ANOTHER_FRIEND);
-        friend.addTrip(TO_BRAZIL);
+        User friend = aUser()
+                .friendsWith(ANOTHER_USER)
+                .withTrips(TO_BRAZIL)
+                .build();
+
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(0));
@@ -46,11 +49,11 @@ public class TripServiceTest {
 
     @Test
     public void should_return_friend_trips_when_users_are_friends() {
-        User friend = new User();
-        friend.addFriend(ANOTHER_FRIEND);
-        friend.addFriend(loggedInUser);
-        friend.addTrip(TO_BRAZIL);
-        friend.addTrip(TO_LONDON);
+        User friend = aUser()
+                .friendsWith(ANOTHER_USER, loggedInUser)
+                .withTrips(TO_BRAZIL, TO_LONDON)
+                .build();
+
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(2));
@@ -58,13 +61,14 @@ public class TripServiceTest {
 
     private class TestableTripService extends TripService {
         @Override
-        protected User getLoggedUser() {
-            return loggedInUser;
-        }
-
-        @Override
         protected List<Trip> tripsBy(User user) {
             return user.trips();
         }
+
+        @Override
+        protected User getLoggedUser() {
+            return loggedInUser;
+        }
     }
+
 }
