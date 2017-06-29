@@ -2,7 +2,7 @@ package org.craftedsw.tripservicekata.trip;
 
 import org.craftedsw.tripservicekata.user.User;
 
-class UserBuilder {
+public class UserBuilder {
     private User[] friends = new User[]{};
     private Trip[] trips = new Trip[] {};
 
