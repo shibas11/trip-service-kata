@@ -48,5 +48,17 @@ Original TripService 에서 개선이 필요한 점들을 기술하세요.
     should_xxx_when_xxx(_then_xxx) 의 구조를 가지고 있다.
 
 클린 코드는 “잘 작성된 산문”과 같은 코드라고도 말합니다. 시연에서 잘 작성된 산문과 같은 코드의 사례를 찾아서 기술하세요.
-    ?????
+    단위테스트의 메소드와 실제 코드가 산문과 같이 읽히는 것이 매우 보람된 것 같습니다.
+
+    should_throw_an_exception_when_user_is_not_logged_in    // 로그인하지 않았으면 throw
+    should_not_return_any_trips_when_users_are_not_friends  // 친구가 아니면 여행정보가 존재하지 않음
+    should_return_friend_trips_when_users_are_friends       // 친구가 맞다면 여행정보를 가져온
+
+    public List<Trip> getFriendTrips(User friend, User loggedInUser) throws UserNotLoggedInException {
+            validate(loggedInUser);                         // 로그인하지 않았으면 throw
+
+            return friend.isFriendWith(loggedInUser)
+                    ? tripsBy(friend)                       // 친구가 맞다면 여행정보를 가져온
+                    : noTrips();                            // 친구가 아니면 여행정보가 존재하지 않음
+        }
 
